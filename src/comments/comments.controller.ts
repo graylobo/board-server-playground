@@ -10,8 +10,8 @@ import {
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto } from './dto/create-comment.dto';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { User } from 'src/users/decorators/user.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { User } from '../users/decorators/user.decorator';
 
 @Controller('comments')
 export class CommentsController {
