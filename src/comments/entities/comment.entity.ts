@@ -8,6 +8,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Post } from '../../posts/entities/post.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Entity()
 export class Comment {
@@ -16,9 +17,6 @@ export class Comment {
 
   @Column('text')
   content: string;
-
-  @Column()
-  authorId: number;
 
   @Column({ nullable: true })
   parentId: number;
@@ -34,6 +32,9 @@ export class Comment {
 
   @ManyToOne(() => Post, (post) => post.comments)
   post: Post;
+
+  @ManyToOne(() => User, (user) => user.comments)
+  author: User;
 
   @ManyToOne(() => Comment, (comment) => comment.replies)
   parent: Comment;

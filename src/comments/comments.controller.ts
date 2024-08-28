@@ -23,11 +23,6 @@ export class CommentsController {
     return this.commentsService.create(createCommentDto, user.id);
   }
 
-  @Get('post/:postId')
-  findAllByPostId(@Param('postId') postId: string) {
-    return this.commentsService.findAllByPostId(+postId);
-  }
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.commentsService.findOne(+id);
