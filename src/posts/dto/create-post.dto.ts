@@ -8,4 +8,9 @@ export class CreatePostDto {
   @IsNotEmpty()
   @IsString()
   content: string;
+
+  author: {
+    id: number;
+    username: string;
+  };
 }

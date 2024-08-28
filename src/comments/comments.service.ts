@@ -23,10 +23,12 @@ export class CommentsService {
   }
 
   async findAllByPostId(postId: number): Promise<Comment[]> {
-    return this.commentsRepository.find({
-      where: { post: { id: postId }, parentId: null },
+    const comments = await this.commentsRepository.find({
+      where: { authorId: postId },
       relations: ['replies'],
+      order: { createdAt: 'DESC' },
     });
+    return comments;
   }
 
   async findOne(id: number): Promise<Comment> {
