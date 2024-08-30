@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Post } from './entities/post.entity';
 import { CreatePostDto } from './dto/create-post.dto';
 import { User } from 'src/users/entities/user.entity';
+import { Comment } from 'src/comments/entities/comment.entity';
 
 @Injectable()
 export class PostsService {
@@ -12,6 +13,8 @@ export class PostsService {
     private postsRepository: Repository<Post>,
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    @InjectRepository(Comment)
+    private commentRepository: Repository<Comment>,
   ) {}
 
   async create(createPostDto: CreatePostDto, authorId: number): Promise<Post> {
@@ -60,9 +63,22 @@ export class PostsService {
   }
 
   async remove(id: number): Promise<void> {
-    const result = await this.postsRepository.delete(id);
-    if (result.affected === 0) {
+    const post = await this.postsRepository.findOne({
+      where: { id },
+      relations: ['comments'],
+    });
+
+    if (!post) {
       throw new NotFoundException(`Post with ID "${id}" not found`);
+    }
+
+    if (post.comments && post.comments.length > 0) {
+      await this.commentRepository.remove(post.comments);
+    }
+
+    const result = await this.postsRepository.remove(post);
+    if (!result) {
+      throw new NotFoundException(`Failed to delete post with ID "${id}"`);
     }
   }
 }
